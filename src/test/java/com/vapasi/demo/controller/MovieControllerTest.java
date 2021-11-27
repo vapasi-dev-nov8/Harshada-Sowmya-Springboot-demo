@@ -3,8 +3,7 @@ package com.vapasi.demo.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vapasi.demo.controller.MovieController;
-import com.vapasi.demo.dto.Movie;
+import com.vapasi.demo.dto.MovieDto;
 import com.vapasi.demo.service.MovieService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +17,7 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 @WebMvcTest(controllers = MovieController.class)
 class MovieControllerTest {
     @Autowired
@@ -44,23 +44,24 @@ class MovieControllerTest {
 
     @Test
     void shouldExpectCreatedIfMovieIsSavedCorrectly() throws Exception {
-        Movie movie = new Movie(null, "Movie Name", "Actor Name", "Director Name");
-        Movie savedMovie = new Movie(1, "Movie Name", "Actor Name", "Director Name");
+        MovieDto movieDto = new MovieDto(null, "Movie Name", "Actor Name", "Director Name");
+        MovieDto savedMovieDto = new MovieDto("1", "Movie Name", "Actor Name", "Director Name");
 
-        when(moviesService.saveMovie(movie)).thenReturn(savedMovie);
+        when(moviesService.saveMovie(movieDto)).thenReturn(savedMovieDto);
 
         mockMvc.perform(post("/api/v1/movies/")
-                        .content(asJsonString(movie))
+                        .content(asJsonString(movieDto))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
-                .andExpect(MockMvcResultMatchers.content().json(asJsonString(savedMovie)));
+                .andExpect(MockMvcResultMatchers.content().json(asJsonString(savedMovieDto)));
 
-        verify(moviesService, times(1)).saveMovie(movie);
+        verify(moviesService, times(1)).saveMovie(movieDto);
     }
-    private String asJsonString(Movie movie) {
+
+    private String asJsonString(MovieDto movieDto) {
         try {
-            return new ObjectMapper().writeValueAsString(movie);
+            return new ObjectMapper().writeValueAsString(movieDto);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
