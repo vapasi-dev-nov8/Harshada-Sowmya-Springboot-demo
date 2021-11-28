@@ -27,7 +27,11 @@ public class MovieController {
         List<MovieDto> movieDtoList = movieService.getMovies();
         return ResponseEntity.ok().body(movieDtoList);
     }
-
+    @PutMapping("/")
+    public ResponseEntity<MovieDto> updateMovie(@RequestBody MovieDto movieDto) {
+        MovieDto savedMovieDto = movieService.saveMovie(movieDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedMovieDto);
+    }
     @PostMapping("/")
     public ResponseEntity<MovieDto> saveMovie(@RequestBody MovieDto movieDto) {
         MovieDto savedMovieDto = movieService.saveMovie(movieDto);
