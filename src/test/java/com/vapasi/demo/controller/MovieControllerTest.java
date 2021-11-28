@@ -28,7 +28,7 @@ class MovieControllerTest {
 
     @Test
     void shouldExpectOKForMoviesReturned() throws Exception {
-        mockMvc.perform(get("/api/v1/movies/")
+        mockMvc.perform(get("/movies/")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
         verify(moviesService, times(1)).getMovies();
@@ -36,7 +36,7 @@ class MovieControllerTest {
 
     @Test
     void shouldExpectNotFoundErrorWhenUrlIsWrong() throws Exception {
-        mockMvc.perform(get("/api/v1/movies")
+        mockMvc.perform(get("/movies")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().is4xxClientError());
         verify(moviesService, times(0)).getMovies();
@@ -49,7 +49,7 @@ class MovieControllerTest {
 
         when(moviesService.saveMovie(movieDto)).thenReturn(savedMovieDto);
 
-        mockMvc.perform(post("/api/v1/movies/")
+        mockMvc.perform(post("/movies/")
                         .content(asJsonString(movieDto))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
