@@ -8,6 +8,19 @@ import java.util.Objects;
 public class MovieDto {
 
     String id;
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setActorName(String actorName) {
+        this.actorName = actorName;
+    }
+
+    public void setDirectorName(String directorName) {
+        this.directorName = directorName;
+    }
+
     String name;
     String actorName;
     String directorName;

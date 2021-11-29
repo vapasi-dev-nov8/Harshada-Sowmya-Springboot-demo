@@ -27,10 +27,19 @@ public class MovieController {
         List<MovieDto> movieDtoList = movieService.getMovies();
         return ResponseEntity.ok().body(movieDtoList);
     }
-    @PutMapping("/")
-    public ResponseEntity<MovieDto> updateMovie(@RequestBody MovieDto movieDto) {
-        MovieDto savedMovieDto = movieService.saveMovie(movieDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedMovieDto);
+    @PutMapping("/{id}")
+    public ResponseEntity<MovieDto> updateMovie(@PathVariable String id, @RequestBody MovieDto movieDto) {
+        MovieDto movie = movieService.getMovieById(id)
+                .orElseThrow(() -> new RuntimeException("Movie not found for this id :: " + id));
+        movie.setId(id);
+        if(movieDto.getName() != null)
+            movie.setName(movieDto.getName());
+        if(movieDto.getActorName() != null)
+            movie.setActorName(movieDto.getActorName());
+        if(movieDto.getDirectorName() != null)
+            movie.setDirectorName(movieDto.getDirectorName());
+        MovieDto updatedMovieDto = movieService.saveMovie(movie);
+        return ResponseEntity.status(HttpStatus.CREATED).body(updatedMovieDto);
     }
     @PostMapping("/")
     public ResponseEntity<MovieDto> saveMovie(@RequestBody MovieDto movieDto) {
